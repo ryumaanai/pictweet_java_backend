@@ -1,0 +1,52 @@
+plugins {
+	id 'java'
+	id 'org.springframework.boot' version '3.4.0'
+	id 'io.spring.dependency-management' version '1.1.6'
+}
+
+group = 'in.tech_camp'
+version = '0.0.1-SNAPSHOT'
+
+java {
+	toolchain {
+		languageVersion = JavaLanguageVersion.of(21)
+	}
+}
+
+configurations {
+	compileOnly {
+		extendsFrom annotationProcessor
+	}
+}
+
+repositories {
+	mavenCentral()
+}
+
+dependencies {
+	implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
+	implementation 'org.springframework.boot:spring-boot-starter-web'
+	implementation 'org.flywaydb:flyway-core'
+	implementation 'org.flywaydb:flyway-database-postgresql'
+	implementation 'org.mybatis.spring.boot:mybatis-spring-boot-starter:3.0.3'
+	compileOnly 'org.projectlombok:lombok'
+	runtimeOnly 'org.postgresql:postgresql'
+	annotationProcessor 'org.projectlombok:lombok'
+	testImplementation 'org.springframework.boot:spring-boot-starter-test'
+	testImplementation 'org.mybatis.spring.boot:mybatis-spring-boot-starter-test:3.0.3'
+	testImplementation 'org.springframework.security:spring-security-test'
+	testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
+	testCompileOnly 'org.projectlombok:lombok'
+  testAnnotationProcessor 'org.projectlombok:lombok'
+	implementation 'org.springframework.boot:spring-boot-starter-validation'
+	implementation 'org.springframework.boot:spring-boot-starter-security'
+	implementation 'org.thymeleaf.extras:thymeleaf-extras-springsecurity6'
+	testImplementation 'com.h2database:h2'
+	implementation 'org.yaml:snakeyaml:1.29'
+	implementation 'com.github.javafaker:javafaker:1.0.2'
+	testImplementation 'org.jsoup:jsoup:1.15.3' 
+}
+
+tasks.named('test') {
+	useJUnitPlatform()
+}

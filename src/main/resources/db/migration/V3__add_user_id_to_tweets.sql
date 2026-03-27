@@ -1,0 +1,3 @@
+ALTER TABLE tweets ADD COLUMN user_id INT;
+
+ALTER TABLE tweets ADD CONSTRAINT fk_user FOREIGN KEY (user_id) REFERENCES users(id);

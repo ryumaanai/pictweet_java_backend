@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <link th:href="@{/css/style.css}" rel="stylesheet" type="text/css">
+    <title>PicTweet</title>
+</head>
+
+<body>
+
+<div th:insert="~{header :: header}"></div>
+
+<div class="contents row">
+  <div class="content_post" th:style="'background-image: url(' + (${tweet.image}) + ');'">
+    <div th:if="${#authorization.expression('isAuthenticated()') and #authentication?.principal.getId() == tweet.user.id}">
+      <div class="more">
+        <span><img th:src="@{/images/arrow_top.png}" /></span>
+        <ul class="more_list">
+          <li>
+            <a th:href="@{/tweets/{tweetId}/edit(tweetId=${tweet.id})}" class="update-btn">編集</a>
+          </li>
+          <li>
+            <form th:action="@{/tweets/{tweetId}/delete(tweetId=${tweet.id})}" th:method="post">
+              <input type="submit" class="delete-btn" value="削除">
+            </form>
+          </li>
+        </ul>
+      </div>
+    </div>
+    <p th:text="${tweet.text}"></p>
+    <span class="name">
+      <a th:href="@{/users/{id}(id=${tweet.user.id})}">
+        <span>投稿者</span><span th:text="${tweet.user.nickname}"></span>
+      </a>
+    </span>
+  </div>
+
+  <div class="container">
+    <div th:if="${#authorization.expression('isAuthenticated()')}">
+      <div th:if="${errorMessages}" th:each="error : ${errorMessages}">
+        <div th:text="${error.defaultMessage}"></div>
+      </div>
+      <form th:action="@{/tweets/{tweetId}/comment(tweetId=${tweet.id})}" method="post" th:object="${commentForm}">
+        <textarea id="text" th:field="*{text}" placeholder="コメントする" rows="2"></textarea>
+        <input type="submit" value="SEND">
+      </form>
+    </div>
+    <div th:if="${#authorization.expression('!isAuthenticated()')}">
+      <strong>
+        <p>※※※ コメントの投稿には新規登録/ログインが必要です ※※※</p>
+      </strong>
+    </div>
+    <div class="comments">
+      <h4>＜コメント一覧＞</h4>
+      <div th:each="comment:${comments}">
+        <p>
+          <strong>
+            <a th:href="@{/users/{userId}(userId=${comment.user.id})}" th:text="${comment.user.nickname}"></a>：
+          </strong>
+          <span th:text="${comment.text}"></span>
+        </p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div th:insert="~{footer :: footer}"></div>
+
+</body>
+</html>

@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <link th:href="@{/css/style.css}" rel="stylesheet" type="text/css">
+    <title>PicTweet</title>
+</head>
+
+<body>
+
+<div th:insert="~{header :: header}"></div>
+
+<div class="contents row">
+  <div class="container">
+    <h2>Sign up</h2>
+    <div class="form">
+      <div th:if="${errorMessages}" th:each="error : ${errorMessages}">
+        <div th:text="${error}"></div>
+      </div>
+      <form th:action="@{/user}" th:method="post" th:object="${userForm}", class="new_user">
+        <div class="field">
+          <label for="nickname">Nickname</label><em>(6 characters maximum)</em><br />
+          <input type="text" id="nickname" th:field="*{nickname}"  autofocus="autofocus" />
+        </div>
+
+        <div class="field">
+          <label for="email">Email</label><br />
+          <input type="email" id="email" th:field="*{email}"  />
+          </div>
+
+          <div class="field">
+            <label for="password">Password</label><em>(6 characters minimum)</em>
+            <input type="password" id="password" th:field="*{password}" />
+          </div>
+
+          <div class='field'>
+            <div class='field-label'>
+              <label for="password_confirmation">Password confirmation</label>
+            </div>
+            <div class='field-input'>
+              <input type="password" th:field="*{passwordConfirmation}" id="password_confirmation" autocomplete="off"/>
+            </div>
+          </div>
+
+          <div class="actions">
+            <input type="submit" value="Sign up">
+          </div>
+
+        </form>
+      </div>
+  </div>
+</div>
+
+<div th:insert="~{footer :: footer}"></div>
+
+</body>
+</html>

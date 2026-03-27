@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <link th:href="@{/css/style.css}" rel="stylesheet" type="text/css">
+    <title>PicTweet</title>
+</head>
+<body>
+
+<div th:insert="~{header :: header}"></div>
+
+<div class="contents row">
+  <div class="container">
+    <h3>投稿する</h3>
+    <div th:replace="~{tweets/form :: form(actionUrl=@{/tweets}, tweetForm=${tweetForm}, errorMessages=${errorMessages})}"></div>
+  </div>
+</div>
+
+<div th:insert="~{footer :: footer}"></div>
+
+</body>
+</html>
