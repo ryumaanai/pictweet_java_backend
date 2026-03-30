@@ -1,0 +1,50 @@
+# ワークフローの名前 (GitHubのActionsタブに表示される)
+name: Java CI with Gradle
+
+# ワークフローが実行されるトリガーとなるイベント
+on:
+  push: # master (または main) ブランチへの push
+    branches: [ master, main ]
+  pull_request: # master (または main) ブランチへの pull request
+    branches: [ master, main ]
+  # workflow_dispatch: # 手動実行を許可する場合 (オプション)
+
+# 実行されるジョブを定義
+jobs:
+  # ジョブID (任意の名前)
+  build-and-test:
+    # ジョブを実行するランナーを指定 (Ubuntuの最新版)
+    runs-on: ubuntu-latest
+
+    # ジョブ内のステップを定義 (上から順に実行される)
+    steps:
+    # 1. リポジトリのコードをチェックアウトするアクション
+    - name: Checkout code
+      uses: actions/checkout@v4 # v4は執筆時点の最新版の一つ。最新版は適宜確認。
+
+    # 2. JDKをセットアップするアクション
+    # プロジェクトで使用するJavaバージョンに合わせて'17'の部分を変更してください
+    - name: Set up JDK 17
+      uses: actions/setup-java@v4
+      with:
+        java-version: '17' # 例: Java 17
+        distribution: 'temurin' # Adoptium Temurinを指定
+        cache: 'gradle' # Gradleの依存関係をキャッシュしてビルドを高速化
+
+    # 3. Gradle Wrapperに実行権限を付与する (Linux/Mac環境向け)
+    - name: Grant execute permission for gradlew
+      run: chmod +x ./gradlew
+
+    # 4. Gradleを使ってビルドとテストを実行するコマンド
+    # 'build' タスクは通常、コンパイルと 'test' タスクの実行を含む
+    - name: Build and test with Gradle
+      run: ./gradlew build
+
+    # 5. (オプション) テスト結果レポートをアーティファクトとしてアップロードする
+    #    Gradleの test タスクがレポートを生成する設定になっている場合
+    - name: Upload test reports # ジョブが完了した後でもレポートをダウンロードできるようにする
+      if: always() # テストが失敗しても常にレポートをアップロードする
+      uses: actions/upload-artifact@v4
+      with:
+        name: test-reports # アーティファクト名
+        path: build/reports/tests/test # レポートが生成されるパス (プロジェクト構成によって異なる場合がある)
