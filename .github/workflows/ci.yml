@@ -6,15 +6,17 @@ jobs:
     runs-on: ubuntu-latest
 
     services:
-      mysql:
-        image: mysql:8.0
+      postgres:
+        image: postgres:16
         ports:
-          - 3306:3306
+          - 5432:5432
         env:
-          MYSQL_ROOT_PASSWORD: root
-          MYSQL_DATABASE: pictweet_test
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: ""
+          POSTGRES_HOST_AUTH_METHOD: trust
+          POSTGRES_DB: pictweet_test
         options: >-
-          --health-cmd "mysqladmin ping -h localhost"
+          --health-cmd "pg_isready -U postgres"
           --health-interval 10s
           --health-timeout 5s
           --health-retries 5
@@ -30,6 +32,4 @@ jobs:
       - name: Build and Test
         run: ./gradlew build
         env:
-          SPRING_DATASOURCE_URL: jdbc:mysql://localhost:3306/pictweet_test
-          SPRING_DATASOURCE_USERNAME: root
-          SPRING_DATASOURCE_PASSWORD: root
+          DATABASE_URL: jdbc:postgresql://localhost:5432/pictweet_test
